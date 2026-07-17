@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">unmachined mark</title>
+  <desc id="desc">Letterpress lowercase u with a red proofreader prohibition over a struck rule.</desc>
+  <rect width="256" height="256" fill="#f3efe6"/>
+  <!-- registration marks -->
+  <g stroke="#1c1a17" stroke-width="1.2" opacity="0.45" fill="none">
+    <path d="M18 28h20M28 18v20"/>
+    <path d="M218 28h20M228 18v20"/>
+    <path d="M18 228h20M28 218v20"/>
+    <path d="M218 228h20M228 218v20"/>
+  </g>
+  <!-- black rule bar -->
+  <rect x="118" y="118" width="92" height="18" rx="2" fill="#1c1a17"/>
+  <!-- letterpress u -->
+  <path fill="#1c1a17" d="M62 78c0-4 2-6 6-6h22c3 0 5 2 5 5v62c0 18 8 28 24 28s24-10 24-28V77c0-3 2-5 5-5h22c4 0 6 2 6 6v66c0 40-22 62-57 62s-57-22-57-62V78z"/>
+  <!-- red proof circle with slash -->
+  <g transform="translate(148 128)" fill="none" stroke="#c41e1e" stroke-width="10" stroke-linecap="round">
+    <circle r="40"/>
+    <path d="M-26 26 L26 -26"/>
+  </g>
+</svg>

@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>unmachined infographics</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+  :root {
+    --paper: #f3efe6;
+    --paper-deep: #e8e2d4;
+    --ink: #1c1a17;
+    --ink-soft: #4a453c;
+    --rule: #2a4a7a;
+    --mark: #c41e1e;
+    --ok: #1f5c3a;
+    --fail: #c41e1e;
+    --hair: #c9c2b0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #888;
+    font-family: "IBM Plex Sans", system-ui, sans-serif;
+    color: var(--ink);
+    padding: 40px;
+  }
+
+  .sheet {
+    width: 1200px;
+    background: var(--paper);
+    position: relative;
+    margin: 0 auto 48px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+
+  /* paper grain */
+  .sheet::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .reg {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border: none;
+    opacity: 0.55;
+  }
+  .reg::before, .reg::after {
+    content: "";
+    position: absolute;
+    background: var(--ink);
+  }
+  .reg::before { left: 8px; top: 0; width: 1.5px; height: 18px; }
+  .reg::after { top: 8px; left: 0; height: 1.5px; width: 18px; }
+  .reg.tl { top: 16px; left: 16px; }
+  .reg.tr { top: 16px; right: 16px; }
+  .reg.bl { bottom: 16px; left: 16px; }
+  .reg.br { bottom: 16px; right: 16px; }
+
+  .pad {
+    padding: 56px 64px 52px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  h1 {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  .lede {
+    font-size: 18px;
+    line-height: 1.45;
+    color: var(--ink-soft);
+    max-width: 52ch;
+    margin-bottom: 36px;
+  }
+
+  /* ——— how it works ——— */
+  #how { height: 720px; }
+
+  .defense {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .card {
+    border: 1.5px solid var(--ink);
+    background: rgba(255,255,255,0.35);
+    padding: 28px 26px 26px;
+    position: relative;
+    min-height: 280px;
+  }
+
+  .card .num {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--rule);
+    letter-spacing: 0.08em;
+    margin-bottom: 12px;
+  }
+
+  .card h2 {
+    font-size: 24px;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+    line-height: 1.15;
+  }
+
+  .card p {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+
+  .card ul {
+    margin-top: 16px;
+    list-style: none;
+  }
+
+  .card li {
+    font-size: 15px;
+    line-height: 1.45;
+    padding: 6px 0 6px 18px;
+    position: relative;
+    border-top: 1px solid var(--hair);
+  }
+
+  .card li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 14px;
+    width: 8px;
+    height: 2px;
+    background: var(--mark);
+  }
+
+  .card .stamp {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    width: 54px;
+    height: 54px;
+    border: 2.5px solid var(--mark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mark);
+    transform: rotate(12deg);
+    opacity: 0.85;
+  }
+
+  .footnote {
+    margin-top: 28px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    color: var(--ink-soft);
+    border-top: 1px solid var(--hair);
+    padding-top: 16px;
+  }
+
+  /* ——— verbs ——— */
+  #verbs { height: 780px; }
+
+  .verbs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .verb {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    border: 1.5px solid var(--ink);
+    background: rgba(255,255,255,0.28);
+    min-height: 88px;
+  }
+
+  .verb code {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    font-weight: 600;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    line-height: 1.3;
+  }
+
+  .verb .desc {
+    padding: 16px 18px;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: center;
+  }
+
+  .verb.full {
+    grid-column: 1 / -1;
+    grid-template-columns: 220px 1fr;
+  }
+
+  .priority {
+    margin-top: 28px;
+    display: flex;
+    gap: 0;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+  }
+
+  .priority div {
+    flex: 1;
+    padding: 14px 16px;
+    font-size: 14px;
+    border-right: 1px solid var(--ink);
+  }
+
+  .priority div:last-child { border-right: none; }
+
+  .priority strong {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: 4px;
+  }
+
+  /* ——— scanner ——— */
+  #scanner { height: 720px; }
+
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr 56px 1fr 56px 1fr;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .panel {
+    border: 1.5px solid var(--ink);
+    background: rgba(255,255,255,0.32);
+    padding: 20px;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .panel .label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    font-weight: 600;
+  }
+
+  .panel.fail .label { color: var(--fail); }
+  .panel.pass .label { color: var(--ok); }
+  .panel.rewrite .label { color: var(--rule); }
+
+  .panel pre {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    flex: 1;
+    color: var(--ink);
+  }
+
+  .badge {
+    margin-top: 14px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 10px;
+    border: 1.5px solid currentColor;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  .panel.fail .badge { color: var(--fail); }
+  .panel.pass .badge { color: var(--ok); }
+  .panel.rewrite .badge { color: var(--rule); }
+
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: var(--ink);
+    font-weight: 300;
+  }
+
+  .scan-note {
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .scan-note .bit {
+    border-top: 2px solid var(--ink);
+    padding-top: 12px;
+  }
+
+  .scan-note .bit strong {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .scan-note .bit span {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+
+  /* ——— architecture ——— */
+  #arch { height: 700px; }
+
+  .layers {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .layer {
+    border: 1.5px solid var(--ink);
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    min-height: 78px;
+    background: rgba(255,255,255,0.28);
+  }
+
+  .layer .slot {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .layer .body {
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .layer .body strong {
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+
+  .layer .body span {
+    font-size: 14px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+    line-height: 1.4;
+  }
+
+  .layer.accent {
+    border-color: var(--mark);
+  }
+
+  .layer.accent .slot {
+    background: var(--mark);
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .chip {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    border: 1px solid var(--ink);
+    padding: 4px 8px;
+    background: var(--paper-deep);
+  }
+
+  /* ——— pipelines blueprint ——— */
+  #pipelines { height: 820px; }
+
+  .pipe-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .pipe {
+    border: 1.5px solid var(--ink);
+    background: rgba(255,255,255,0.28);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pipe-head {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 14px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .pipe-head strong {
+    font-size: 18px;
+    letter-spacing: -0.02em;
+  }
+
+  .pipe-head span {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    opacity: 0.8;
+  }
+
+  .pipe-head.design {
+    background: var(--rule);
+  }
+
+  .steps {
+    list-style: none;
+    padding: 8px 0;
+  }
+
+  .steps li {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--hair);
+    min-height: 62px;
+  }
+
+  .steps li:last-child { border-bottom: none; }
+
+  .steps .n {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--mark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid var(--hair);
+  }
+
+  .steps .t {
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .steps .t strong {
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+
+  .steps .t span {
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+    line-height: 1.35;
+  }
+
+  .dispatch {
+    margin-top: 20px;
+    border: 1.5px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .dispatch .cell {
+    padding: 12px 14px;
+    border-right: 1px solid var(--ink);
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--ink-soft);
+  }
+
+  .dispatch .cell:last-child { border-right: none; }
+
+  .dispatch .cell strong {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--mark);
+    margin-bottom: 4px;
+  }
+
+  /* ——— install / hosts blueprint ——— */
+  #install { height: 780px; }
+
+  .install-top {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .terminal {
+    border: 1.5px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 22px 24px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13.5px;
+    line-height: 1.55;
+    min-height: 280px;
+    white-space: pre-wrap;
+  }
+
+  .terminal .prompt { color: #b8c4a8; }
+  .terminal .cmt { color: #8a8478; }
+  .terminal .ok { color: #9dcc9a; }
+
+  .hosts {
+    display: grid;
+    grid-template-rows: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .host {
+    border: 1.5px solid var(--ink);
+    background: rgba(255,255,255,0.32);
+    display: grid;
+    grid-template-columns: 110px 1fr;
+    align-items: center;
+  }
+
+  .host .name {
+    background: var(--paper-deep);
+    border-right: 1.5px solid var(--ink);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 14px 12px;
+    text-align: center;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .host .path {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    padding: 12px 14px;
+    color: var(--ink-soft);
+    line-height: 1.35;
+  }
+
+  .constraints {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .constraints .bit {
+    border: 1.5px solid var(--ink);
+    padding: 16px 18px;
+    background: rgba(255,255,255,0.28);
+    min-height: 110px;
+  }
+
+  .constraints .bit strong {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .constraints .bit span {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+
+<!-- 1. How it works -->
+<section class="sheet" id="how">
+  <div class="reg tl"></div><div class="reg tr"></div>
+  <div class="reg bl"></div><div class="reg br"></div>
+  <div class="pad">
+    <div class="eyebrow">unmachined · how it works</div>
+    <h1>Two lines of defense.<br>Neither is optional.</h1>
+    <p class="lede">Models converge on the same center. unmachined does not ask the model to “sound more human.” It checks known tells first, then refuses to replace one monoculture with another.</p>
+    <div class="defense">
+      <article class="card">
+        <div class="stamp">01</div>
+        <div class="num">LINE 01</div>
+        <h2>Severity-tiered catalogs</h2>
+        <p>Deterministic scanners score prose and UI source before any model self-judgment.</p>
+        <ul>
+          <li>critical 20 · major 10 · minor 3</li>
+          <li>score 0–100, fail at 40</li>
+          <li>exit code 1 for CI and hooks</li>
+        </ul>
+      </article>
+      <article class="card">
+        <div class="stamp">02</div>
+        <div class="num">LINE 02</div>
+        <h2>Variety requirement</h2>
+        <p>A fix becomes a new tell the moment every output converges on the same alternative.</p>
+        <ul>
+          <li>two runs should not share a voice</li>
+          <li>layout skeletons must not clone</li>
+          <li>banning “delve” just moves the cluster</li>
+        </ul>
+      </article>
+    </div>
+    <p class="footnote">Priority when effort splits: text first · design &amp; layout equal second · branding last</p>
+  </div>
+</section>
+
+<!-- 2. Verbs -->
+<section class="sheet" id="verbs">
+  <div class="reg tl"></div><div class="reg tr"></div>
+  <div class="reg bl"></div><div class="reg br"></div>
+  <div class="pad">
+    <div class="eyebrow">unmachined · command surface</div>
+    <h1>Six verbs. One skill.</h1>
+    <p class="lede">The skill is the command. The first argument selects the workflow. Hosts without a leading slash use the same words in natural language.</p>
+    <div class="verbs">
+      <div class="verb full">
+        <code>/unmachined &lt;task&gt;</code>
+        <div class="desc">Default. Build or write with every applicable rule active from the start.</div>
+      </div>
+      <div class="verb">
+        <code>audit &lt;target&gt;</code>
+        <div class="desc">Score and rank findings. Change nothing.</div>
+      </div>
+      <div class="verb">
+        <code>fix &lt;target&gt;</code>
+        <div class="desc">Audit, repair, verify, then summarize.</div>
+      </div>
+      <div class="verb">
+        <code>text &lt;target&gt;</code>
+        <div class="desc">Prose and copy pipeline only.</div>
+      </div>
+      <div class="verb">
+        <code>ui &lt;target&gt;</code>
+        <div class="desc">Interface and frontend pipeline only.</div>
+      </div>
+      <div class="verb full">
+        <code>diff [base]</code>
+        <div class="desc">Audit only changed lines and necessary context. Never widen into unrelated cleanup.</div>
+      </div>
+    </div>
+    <div class="priority">
+      <div><strong>01 text</strong>Tells, honesty, rhythm</div>
+      <div><strong>02 design</strong>Layout, tokens, a11y</div>
+      <div><strong>03 branding</strong>Only after the above</div>
+      <div><strong>read-only</strong>audit · diff never edit</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Scanner flow -->
+<section class="sheet" id="scanner">
+  <div class="reg tl"></div><div class="reg tr"></div>
+  <div class="reg bl"></div><div class="reg br"></div>
+  <div class="pad">
+    <div class="eyebrow">unmachined · the scanner</div>
+    <h1>Facts pass. Filler fails.</h1>
+    <p class="lede">Deterministic checks run before the model grades anything. A model asked to judge its own prose will grade generously.</p>
+    <div class="flow">
+      <div class="panel fail">
+        <div class="label">draft · fail</div>
+        <pre>In today's rapidly evolving
+landscape, our cutting-edge
+platform empowers teams to
+unlock actionable insights.
+At the end of the day, it's
+a game-changer.</pre>
+        <div class="badge">slop score 100 · FAIL</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="panel rewrite">
+        <div class="label">rewrite · say something</div>
+        <pre>The dashboard shows which
+of your accounts churned
+last week, and why. Most
+teams find two or three
+they had written off as
+healthy.</pre>
+        <div class="badge">concrete claim · one fact</div>
+      </div>
+      <div class="arrow">→</div>
+      <div class="panel pass">
+        <div class="label">scan · pass</div>
+        <pre>$ python3 scripts/
+  scan_text.py draft.md
+
+slop score: 0/100
+(threshold 40)
+→ PASS</pre>
+        <div class="badge">exit 0 · CI green</div>
+      </div>
+    </div>
+    <div class="scan-note">
+      <div class="bit">
+        <strong>Zero dependencies</strong>
+        <span>Python 3.8+. No install step. No network access.</span>
+      </div>
+      <div class="bit">
+        <strong>Two scanners</strong>
+        <span>scan_text.py for prose · scan_ui.py for UI source.</span>
+      </div>
+      <div class="bit">
+        <strong>Self-hosting</strong>
+        <span>This repo scans its own docs in CI. Sloppy README goes red.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. Architecture -->
+<section class="sheet" id="arch">
+  <div class="reg tl"></div><div class="reg tr"></div>
+  <div class="reg bl"></div><div class="reg br"></div>
+  <div class="pad">
+    <div class="eyebrow">unmachined · package shape</div>
+    <h1>Load only what the task needs.</h1>
+    <p class="lede">SKILL.md is the router. References stay cold until a pipeline asks for them. Scanners stay deterministic and offline.</p>
+    <div class="layers">
+      <div class="layer accent">
+        <div class="slot">ROUTER</div>
+        <div class="body">
+          <strong>SKILL.md</strong>
+          <span>Verbs, pipelines, resolved rule conflicts, output discipline.</span>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="slot">TEXT</div>
+        <div class="body">
+          <strong>text-tells · voice-and-copy</strong>
+          <span>Vocabulary kill list, cadence, honesty rules, microcopy tables.</span>
+          <div class="chips"><span class="chip">scan_text.py</span><span class="chip">threshold 40</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="slot">DESIGN</div>
+        <div class="body">
+          <strong>design-tells · design-system · audit-playbook · stack-rules</strong>
+          <span>Visual tells, OKLCH tokens, pre-emit critique, Next/Tailwind/shadcn.</span>
+          <div class="chips"><span class="chip">scan_ui.py</span><span class="chip">WCAG 2.2 AA</span></div>
+        </div>
+      </div>
+      <div class="layer">
+        <div class="slot">HOSTS</div>
+        <div class="body">
+          <strong>Claude · Codex · Cursor · Hermes</strong>
+          <span>One skill directory. Symlink per host. No separate command files.</span>
+        </div>
+      </div>
+    </div>
+    <p class="footnote">MIT · Python scanners only · agent skill, not an AI detector</p>
+  </div>
+</section>
+
+<!-- 5. Pipelines blueprint -->
+<section class="sheet" id="pipelines">
+  <div class="reg tl"></div><div class="reg tr"></div>
+  <div class="reg bl"></div><div class="reg br"></div>
+  <div class="pad">
+    <div class="eyebrow">unmachined · pipeline blueprint</div>
+    <h1>Two pipelines. Shared discipline.</h1>
+    <p class="lede">Surface detection picks the path. Scan first, then model judgment. Hard gates stay offline and reproducible.</p>
+    <div class="pipe-grid">
+      <div class="pipe">
+        <div class="pipe-head">
+          <strong>Text pipeline</strong>
+          <span>MAIN PRIORITY</span>
+        </div>
+        <ol class="steps">
+          <li>
+            <div class="n">01</div>
+            <div class="t">
+              <strong>Load catalogs</strong>
+              <span>text-tells.md · voice-and-copy.md for microcopy</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">02</div>
+            <div class="t">
+              <strong>Draft or edit</strong>
+              <span>Write the claim first. Vocabulary comes second.</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">03</div>
+            <div class="t">
+              <strong>Run scan_text.py</strong>
+              <span>Score &gt;= 40 blocks fix and build delivery</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">04</div>
+            <div class="t">
+              <strong>Self-critique once</strong>
+              <span>What still reads generated? One revise pass.</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">05</div>
+            <div class="t">
+              <strong>Honesty gate</strong>
+              <span>Real numbers only. No invented quotes or metrics.</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <div class="pipe">
+        <div class="pipe-head design">
+          <strong>Design pipeline</strong>
+          <span>UI · LAYOUT</span>
+        </div>
+        <ol class="steps">
+          <li>
+            <div class="n">01</div>
+            <div class="t">
+              <strong>Load design rules</strong>
+              <span>design-tells · design-system · stack-rules when needed</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">02</div>
+            <div class="t">
+              <strong>Run scan_ui.py</strong>
+              <span>Grep-able tells before visual judgment</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">03</div>
+            <div class="t">
+              <strong>Lock structure + tokens</strong>
+              <span>Layout skeleton first. OKLCH tokens. One bold risk.</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">04</div>
+            <div class="t">
+              <strong>Pre-emit critique</strong>
+              <span>Six axes, 1-5. Any axis under 3 triggers a rewrite.</span>
+            </div>
+          </li>
+          <li>
+            <div class="n">05</div>
+            <div class="t">
+              <strong>Hard gates</strong>
+              <span>WCAG 2.2 AA · reduced motion · focus · 320-768px</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="dispatch">
+      <div class="cell"><strong>dispatch</strong>Parse verb first. Default is build with all rules on.</div>
+      <div class="cell"><strong>target</strong>Smallest file, dir, URL, or paste that satisfies the ask.</div>
+      <div class="cell"><strong>read-only</strong>audit and diff never edit until the user asks for fix.</div>
+      <div class="cell"><strong>variety</strong>Consecutive outputs must not clone voice or skeleton.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. Install / hosts blueprint -->
+<section class="sheet" id="install">
+  <div class="reg tl"></div><div class="reg tr"></div>
+  <div class="reg bl"></div><div class="reg br"></div>
+  <div class="pad">
+    <div class="eyebrow">unmachined · install blueprint</div>
+    <h1>One skill directory.<br>Four host symlinks.</h1>
+    <p class="lede">Clone once. Point each agent host at the same tree. The skill supplies the command; no separate command files.</p>
+    <div class="install-top">
+      <pre class="terminal"><span class="cmt"># global install</span>
+<span class="prompt">$</span> git clone https://github.com/0xNyk/unmachined.git
+<span class="prompt">$</span> cd unmachined
+<span class="prompt">$</span> ln -s "$(pwd)" ~/.claude/skills/unmachined
+<span class="prompt">$</span> ln -s "$(pwd)" ~/.codex/skills/unmachined
+<span class="prompt">$</span> ln -s "$(pwd)" ~/.cursor/skills/unmachined
+<span class="prompt">$</span> ln -s "$(pwd)" ~/.hermes/skills/unmachined
+
+<span class="cmt"># scanners: Python 3.8+, zero deps</span>
+<span class="prompt">$</span> python3 scripts/scan_text.py draft.md
+<span class="ok">slop score: 0/100 (threshold 40) -&gt; PASS</span></pre>
+      <div class="hosts">
+        <div class="host">
+          <div class="name">Claude</div>
+          <div class="path">~/.claude/skills/unmachined<br>or .claude/skills/unmachined</div>
+        </div>
+        <div class="host">
+          <div class="name">Codex</div>
+          <div class="path">~/.codex/skills/unmachined<br>or .codex/skills/unmachined</div>
+        </div>
+        <div class="host">
+          <div class="name">Cursor</div>
+          <div class="path">~/.cursor/skills/unmachined<br>or .cursor/skills/unmachined</div>
+        </div>
+        <div class="host">
+          <div class="name">Hermes</div>
+          <div class="path">~/.hermes/skills/unmachined<br>project skill folder also fine</div>
+        </div>
+      </div>
+    </div>
+    <div class="constraints">
+      <div class="bit">
+        <strong>No package install</strong>
+        <span>Scanners need Python only. No pip, no network, no runtime deps.</span>
+      </div>
+      <div class="bit">
+        <strong>Project-scoped OK</strong>
+        <span>Put the directory under the host project skill folder when the skill should not be global.</span>
+      </div>
+      <div class="bit">
+        <strong>Not an AI detector</strong>
+        <span>A low score means known tells are absent. It is a writing tool for your drafts.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

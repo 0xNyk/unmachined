@@ -1,0 +1,40 @@
+name: Propose or remove a tell
+description: Add evidence for a new rule or a false positive in an existing one.
+title: "tell: "
+body:
+  - type: dropdown
+    id: action
+    attributes:
+      label: Proposed action
+      options:
+        - Add a tell
+        - Change severity
+        - Remove or narrow a tell
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Provide safe examples, links, or generation counts. Explain any known counterexamples.
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Surface
+      options:
+        - Prose
+        - Chat
+        - UI copy
+        - Interface design
+        - Frontend source
+    validations:
+      required: true
+  - type: textarea
+    id: alternative
+    attributes:
+      label: Better alternative
+      description: Give a range of repairs, not one mandatory replacement.
+    validations:
+      required: true

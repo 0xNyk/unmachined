@@ -1,0 +1,114 @@
+name: ci
+
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  # The skill has to survive its own scanner. If a doc that ships in this repo
+  # reads as slop, the build fails. That is the whole point.
+  #
+  # references/*.md are deliberately excluded: they are catalogs OF slop and
+  # score 100 by design.
+  self-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python: ["3.8", "3.11", "3.13"]
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Validate the Agent Skills package
+        run: |
+          python3 -m py_compile scripts/*.py
+          python3 scripts/validate_skill.py
+          python3 -m unittest discover -s tests -v
+
+      - name: Every shipped document passes the scanner
+        run: |
+          for f in README.md SKILL.md AGENTS.md ATTRIBUTION.md CHANGELOG.md \
+            CODE_OF_CONDUCT.md CONTRIBUTING.md GOVERNANCE.md SECURITY.md SUPPORT.md \
+            docs/maintainer-guide.md docs/brand.md; do
+            echo "--- $f"
+            python3 scripts/scan_text.py "$f"
+          done
+
+  behavior:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: "3.11"
+
+      - name: Known slop is rejected
+        run: |
+          if echo "In today's evolving landscape, our cutting-edge platform empowers teams to unlock actionable insights. At the end of the day, it's a game-changer." \
+            | python3 scripts/scan_text.py -; then
+            echo "regression: slop passed the scanner"; exit 1
+          fi
+
+      - name: Clean prose is accepted
+        run: |
+          echo "The dashboard shows which of your accounts churned last week, and why. Most teams find two or three they had written off as healthy." \
+            | python3 scripts/scan_text.py -
+
+      - name: Markdown links do not trip the bracket-scaffold rule
+        run: |
+          echo "See [ATTRIBUTION.md](ATTRIBUTION.md) for the source list." \
+            | python3 scripts/scan_text.py -
+
+      - name: A real bracket scaffold is still caught
+        run: |
+          if printf 'Intro line.\n\n[Hook - sharp claim goes here]\n' \
+            | python3 scripts/scan_text.py - --threshold 20; then
+            echo "regression: scaffold not caught"; exit 1
+          fi
+
+      - name: A real TODO marker is caught
+        run: |
+          if printf 'Ship it.\n\nTODO: fix the thing\n' \
+            | python3 scripts/scan_text.py - --threshold 20; then
+            echo "regression: TODO marker not caught"; exit 1
+          fi
+
+      - name: Lowercase "todo" as an ordinary noun is not a template artifact
+        run: |
+          echo "Kanban columns: inbox, backlog, todo, in-progress, review, done." \
+            | python3 scripts/scan_text.py -
+
+      # cadence analysis needs 4+ sentences before it will judge repetition
+      - name: Repetitive sentence openers are caught
+        run: |
+          if printf 'However the cat sat. However the dog ran. However the bird flew. The rain fell.\n' \
+            | python3 scripts/scan_text.py - --threshold 10; then
+            echo "regression: repetition not caught"; exit 1
+          fi
+
+      - name: Markdown lists and HTML tags are not sentence openers
+        run: |
+          printf '<details>\n<summary>One</summary>\n<details>\n<summary>Two</summary>\n<details>\n\n1. **Round** one\n2. **Round** two\n3. **Round** three\n' \
+            | python3 scripts/scan_text.py -
+
+      - name: JSON output is valid
+        run: |
+          echo "test" | python3 scripts/scan_text.py - --json | python3 -m json.tool > /dev/null
+
+      - name: UI scanner reports the purple gradient
+        run: |
+          mkdir -p /tmp/ui
+          printf 'export default function Hero() {\n  return <div className="bg-gradient-to-r from-purple-500 to-indigo-600 min-h-screen" />\n}\n' > /tmp/ui/hero.tsx
+          python3 scripts/scan_ui.py /tmp/ui | grep -q "AI purple gradient"

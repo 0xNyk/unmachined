@@ -1,0 +1,33 @@
+name: Bug report
+description: Report reproducible incorrect behavior in the skill or scanners.
+title: "bug: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include secrets, private drafts, or vulnerability details. Use SECURITY.md for security reports.
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include the exact command, smallest safe input, actual output, and expected output.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.2.0 or commit SHA
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: Host, host version, OS, and Python version
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
