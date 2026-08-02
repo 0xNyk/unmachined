@@ -228,3 +228,13 @@ decision boundaries live in [SUPPORT.md](SUPPORT.md) and [GOVERNANCE.md](GOVERNA
 
 MIT. Material distilled from third-party sources remains credited in
 [ATTRIBUTION.md](ATTRIBUTION.md).
+
+---
+
+## From this repo to a working agent OS
+
+Quiet commercial paths from [nyk.dev](https://www.nyk.dev) — same operator, fixed scope:
+
+- Free checklist: https://www.nyk.dev/resources/agent-os-checklist?utm_source=github&utm_medium=readme&utm_campaign=oss_proof&utm_content=unmachined
+- Self-serve Production Agent OS Kit (€149 founding): https://www.nyk.dev/go/agent-os-kit?utm_source=github&utm_medium=readme&utm_campaign=oss_proof&utm_content=unmachined
+- Hands-on packages: https://www.nyk.dev/consulting?utm_source=github&utm_medium=readme&utm_campaign=oss_proof&utm_content=unmachined#agent-os
